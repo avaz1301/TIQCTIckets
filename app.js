@@ -1,9 +1,11 @@
 var express = require('express');
 var path = require('path');
+require('dotenv').config();
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var stormpath = require('express-stormpath');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -16,6 +18,34 @@ app.set('view engine', 'hbs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(stormpath.init(app, {
+  web:{
+    logout:{
+      enabled: true
+    },
+    login:{
+      nextUri:'/ticketForm'
+    }
+  },
+  client: {
+    apiKey: {
+      id: process.env.STORMPATH_CLIENT_APIKEY_ID,
+      secret: process.env.STORMPATH_CLIENT_APIKEY_SECRET,
+    }
+  },
+  application: {
+    href: process.env.STORMPATH_APPLICATION_HREF,
+  }
+}));
+
+app.on('stormpath.ready', function () {
+  console.log('Stormpath Ready');
+});
+
+app.use(stormpath.init(app, {
+
+}));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

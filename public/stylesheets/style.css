@@ -1,8 +1,42 @@
-body {
+body,html {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Raleway', sans-serif !important;
+  height: 100vh;
+  background: linear-gradient(-40deg, #4776E6, #8E54E9);
 }
 
 a {
   color: #00B7FF;
 }
+
+#parent0{
+  color:#FFFFFF;
+}
+
+.navbar{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.navbar-brand {
+    padding: 0;
+    margin-top: 1%;
+    margin-right: 15px;
+}
+
+.navbar img {
+  width: 125px;
+    height: 40px !important;
+}
+
+
+#parent0 h1{
+  font-size: 64px;
+}
+ #title-div,form{
+   transform: translateY(40%);
+ }
+
+ #button-pane a{
+   width: 75%;
+ }
