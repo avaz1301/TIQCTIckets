@@ -5,11 +5,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
 var stormpath = require('express-stormpath');
+var MongoClient = require('mongodb').MongoClient, assert = require('assert');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -19,12 +19,22 @@ app.set('view engine', 'hbs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(stormpath.init(app, {
+  application: {
+    href: process.env.STORMPATH_APPLICATION_HREF,
+  },
   web:{
+    login:{
+      enabled: true,
+      nextUri: "/ticketForm"
+    },
     logout:{
       enabled: true
     },
-    login:{
-      nextUri:'/ticketForm'
+    me: {
+      enabled: false
+    },
+    register: {
+      enabled: false
     }
   },
   client: {
@@ -33,17 +43,6 @@ app.use(stormpath.init(app, {
       secret: process.env.STORMPATH_CLIENT_APIKEY_SECRET,
     }
   },
-  application: {
-    href: process.env.STORMPATH_APPLICATION_HREF,
-  }
-}));
-
-app.on('stormpath.ready', function () {
-  console.log('Stormpath Ready');
-});
-
-app.use(stormpath.init(app, {
-
 }));
 
 app.use(logger('dev'));
@@ -53,7 +52,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+// app.use('/users', users);
+
+app.on('stormpath.ready', function () {
+  console.log('Stormpath Ready');
+  app.listen(3000);
+});
+
+
+// MONGO START
+MongoClient.connect('mongodb://localhost:27017/tiqcTickets', function (err, db) {
+  if (err) throw err
+
+  db.collection('tickets').find().toArray(function (err, result) {
+    if (err) throw err
+
+    console.log(result)
+  })
+})
+//MONGO end
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

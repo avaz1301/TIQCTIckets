@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
+var stormpath = require('express-stormpath');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'TIQC Ticket System', isLoggedIn: false });
+router.get('/', stormpath.getUser, function(req, res) {
+  res.render('index', { title: 'TIQC Ticket System', isLoggedIn: req.user });
 });
 
-router.get('/ticketForm', function(req, res) {
-  res.render('ticketForm', { isLoggedIn: true });
+router.get('/ticketForm',stormpath.authenticationRequired, function(req, res) {
+  res.render('ticketForm');
 });
 
 router.get('/logout', function(req, res) {

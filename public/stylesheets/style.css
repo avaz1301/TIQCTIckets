@@ -29,12 +29,20 @@ a {
     height: 40px !important;
 }
 
-
 #parent0 h1{
   font-size: 64px;
 }
- #title-div,form{
+ #title-div{
    transform: translateY(40%);
+ }
+
+ #parent1 form{
+   transform: translateY(20%);
+ }
+
+ #parent1 label,
+ #parent1 h1{
+   color: #FFFFFF;
  }
 
  #button-pane a{
